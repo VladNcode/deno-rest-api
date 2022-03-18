@@ -1,4 +1,5 @@
-// deno-lint-ignore-file no-explicit-any
+import { Request, Response } from 'https://deno.land/x/oak@v10.4.0/mod.ts';
+
 interface IBook {
   isbn: string;
   author: string;
@@ -23,11 +24,11 @@ let books: Array<IBook> = [
   },
 ];
 
-const getBooks = ({ response }: { response: any }) => {
+const getBooks = ({ response }: { response: Response }) => {
   response.body = books;
 };
 
-const getBook = ({ params, response }: { params: { isbn: string }; response: any }) => {
+const getBook = ({ params, response }: { params: { isbn: string }; response: Response }) => {
   const book: IBook | undefined = searchBookByIsbn(params.isbn);
   if (book) {
     response.status = 200;
@@ -38,7 +39,7 @@ const getBook = ({ params, response }: { params: { isbn: string }; response: any
   }
 };
 
-const addBook = async ({ request, response }: { request: any; response: any }) => {
+const addBook = async ({ request, response }: { request: Request; response: Response }) => {
   const body = await request.body().value;
   const book: IBook = body;
   books.push(book);
@@ -52,8 +53,8 @@ const updateBook = async ({
   response,
 }: {
   params: { isbn: string };
-  request: any;
-  response: any;
+  request: Request;
+  response: Response;
 }) => {
   let book: IBook | undefined = searchBookByIsbn(params.isbn);
   if (book) {
@@ -69,7 +70,7 @@ const updateBook = async ({
   }
 };
 
-const deleteBook = ({ params, response }: { params: { isbn: string }; response: any }) => {
+const deleteBook = ({ params, response }: { params: { isbn: string }; response: Response }) => {
   books = books.filter(book => book.isbn !== params.isbn);
   response.body = { message: 'OK' };
   response.status = 200;
