@@ -39,8 +39,8 @@ const getBook = ({ params, response }: { params: { isbn: string }; response: any
 };
 
 const addBook = async ({ request, response }: { request: any; response: any }) => {
-  const body = await request.body();
-  const book: IBook = await body.value;
+  const body = await request.body().value;
+  const book: IBook = body;
   books.push(book);
   response.body = { message: 'OK' };
   response.status = 200;
@@ -57,9 +57,8 @@ const updateBook = async ({
 }) => {
   let book: IBook | undefined = searchBookByIsbn(params.isbn);
   if (book) {
-    const body = await request.body();
-    const updateInfos: { author?: string; title?: string } = await body.value;
-    console.log(updateInfos);
+    const body = await request.body().value;
+    const updateInfos: { author?: string; title?: string } = body;
     book = { ...book, ...updateInfos };
     books = [...books.filter(book => book.isbn !== params.isbn), book];
     response.status = 200;
